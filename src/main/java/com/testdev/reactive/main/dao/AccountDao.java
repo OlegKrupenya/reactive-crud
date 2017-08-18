@@ -4,8 +4,6 @@ import com.mongodb.client.result.DeleteResult;
 import com.testdev.reactive.main.domain.Account;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -36,12 +34,14 @@ public class AccountDao {
         return template.insert(account);
     }
 
-    public void updateAccount(Mono<Account> account) {
-        Update update = Update.update("id", account.block().getId());
-        template.update(Account.class).matching(query(where("id").is(account.block().getId()))).apply(update);
+    public Mono<Account> update(Mono<Account> accountMono) {
+//        Account account = accountMono.block();
+//        Update update = Update.update("number", account.getNumber());
+//        return template.update(Account.class).matching(query(where("id").is(account.getId()))).apply(update).first();
+        return template.save(accountMono);
     }
 
-    public Mono<DeleteResult> deleteAccount(String accountId) {
+    public Mono<DeleteResult> delete(String accountId) {
         Mono<Account> byId = findById(accountId);
         return template.remove(byId);
     }

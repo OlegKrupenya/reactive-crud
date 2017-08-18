@@ -4,8 +4,6 @@ import com.mongodb.client.result.DeleteResult;
 import com.testdev.reactive.main.dao.AccountDao;
 import com.testdev.reactive.main.domain.Account;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -14,7 +12,7 @@ import reactor.core.publisher.Mono;
  * @author Oleg Krupenya
  */
 @RestController
-public class WelcomeController {
+public class AccountController {
 
     @Autowired
     private AccountDao accountDao;
@@ -23,7 +21,7 @@ public class WelcomeController {
 //    @GetMapping(value = "/test",produces = "application/stream+json")
     @GetMapping(value = "/accounts")
 //    @GetMapping(value = "/test",produces = "text/event-stream")
-    public Flux<Account> welcome() {
+    public Flux<Account> findAccounts() {
         return accountDao.findAll();
     }
 
@@ -33,8 +31,8 @@ public class WelcomeController {
     }
 
     @PutMapping(value = "/account")
-    public void updateAccount(Mono<Account> account) {
-        accountDao.updateAccount(account);
+    public Mono<Account> updateAccount(@RequestBody Mono<Account> account) {
+        return accountDao.update(account);
     }
 
     @PostMapping(value = "/account")
@@ -44,6 +42,6 @@ public class WelcomeController {
 
     @DeleteMapping(value = "/account/{accountId}")
     public Mono<DeleteResult> deleteAccount(@PathVariable String accountId) {
-        return accountDao.deleteAccount(accountId);
+        return accountDao.delete(accountId);
     }
 }
