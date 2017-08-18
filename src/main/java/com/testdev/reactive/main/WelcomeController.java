@@ -5,6 +5,7 @@ import com.testdev.reactive.main.domain.Account;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -29,5 +30,10 @@ public class WelcomeController {
     @GetMapping(value = "/account/{accountId}")
     public Mono<Account> findAccountById(@PathVariable String accountId) {
         return accountDao.findById(accountId);
+    }
+
+    @PutMapping(value = "/account")
+    public void updateAccount(Mono<Account> account) {
+        accountDao.updateAccount(account);
     }
 }

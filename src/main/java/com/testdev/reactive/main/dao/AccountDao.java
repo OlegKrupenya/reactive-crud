@@ -3,6 +3,8 @@ package com.testdev.reactive.main.dao;
 import com.testdev.reactive.main.domain.Account;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -31,5 +33,10 @@ public class AccountDao {
 
     public Mono<Account> save(Mono<Account> account) {
         return template.insert(account);
+    }
+
+    public void updateAccount(Mono<Account> account) {
+        Update update = Update.update("id", account.block().getId());
+        template.update(Account.class).matching(query(where("id").is(account.block().getId()))).apply(update);
     }
 }
