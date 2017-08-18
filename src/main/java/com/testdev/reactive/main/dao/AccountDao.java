@@ -43,7 +43,6 @@ public class AccountDao {
 
     public Mono<DeleteResult> deleteAccount(String accountId) {
         Account byId = findById(accountId).block();
-        Mono<DeleteResult> resultMono = template.remove(byId);
-        return resultMono;
+        return template.remove(byId);
     }
 }

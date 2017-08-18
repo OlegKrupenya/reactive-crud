@@ -38,8 +38,8 @@ public class WelcomeController {
     }
 
     @PostMapping(value = "/account")
-    public Mono<ResponseEntity<Account>> addAccount(Mono<Account> account) {
-        return accountDao.save(account).map(account1 -> new ResponseEntity(account1, HttpStatus.CREATED));
+    public Mono<Account> addAccount(@RequestBody Mono<Account> account) {
+        return accountDao.save(account);
     }
 
     @DeleteMapping(value = "/account/{accountId}")
