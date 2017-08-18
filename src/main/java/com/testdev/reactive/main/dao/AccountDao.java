@@ -35,9 +35,6 @@ public class AccountDao {
     }
 
     public Mono<Account> update(Mono<Account> accountMono) {
-//        Account account = accountMono.block();
-//        Update update = Update.update("number", account.getNumber());
-//        return template.update(Account.class).matching(query(where("id").is(account.getId()))).apply(update).first();
         return template.save(accountMono);
     }
 

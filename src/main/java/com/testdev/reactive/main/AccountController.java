@@ -17,10 +17,7 @@ public class AccountController {
     @Autowired
     private AccountDao accountDao;
 
-    // TODO: use flux with delay on the server side and events on the UI
-//    @GetMapping(value = "/test",produces = "application/stream+json")
     @GetMapping(value = "/accounts")
-//    @GetMapping(value = "/test",produces = "text/event-stream")
     public Flux<Account> findAccounts() {
         return accountDao.findAll();
     }
@@ -28,6 +25,11 @@ public class AccountController {
     @GetMapping(value = "/account/{accountId}")
     public Mono<Account> findAccountById(@PathVariable String accountId) {
         return accountDao.findById(accountId);
+    }
+
+    @GetMapping(value = "/accounts/customer/{customerId}")
+    public Flux<Account> findAccountByCustomerId(@PathVariable String customerId) {
+        return accountDao.findByCustomerId(customerId);
     }
 
     @PutMapping(value = "/account")
