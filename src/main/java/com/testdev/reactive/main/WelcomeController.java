@@ -1,12 +1,12 @@
 package com.testdev.reactive.main;
 
+import com.mongodb.client.result.DeleteResult;
 import com.testdev.reactive.main.dao.AccountDao;
 import com.testdev.reactive.main.domain.Account;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -21,7 +21,7 @@ public class WelcomeController {
 
     // TODO: use flux with delay on the server side and events on the UI
 //    @GetMapping(value = "/test",produces = "application/stream+json")
-    @GetMapping(value = "/test")
+    @GetMapping(value = "/accounts")
 //    @GetMapping(value = "/test",produces = "text/event-stream")
     public Flux<Account> welcome() {
         return accountDao.findAll();
@@ -35,5 +35,15 @@ public class WelcomeController {
     @PutMapping(value = "/account")
     public void updateAccount(Mono<Account> account) {
         accountDao.updateAccount(account);
+    }
+
+    @PostMapping(value = "/account")
+    public Mono<ResponseEntity<Account>> addAccount(Mono<Account> account) {
+        return accountDao.save(account).map(account1 -> new ResponseEntity(account1, HttpStatus.CREATED));
+    }
+
+    @DeleteMapping(value = "/account/{accountId}")
+    public Mono<DeleteResult> deleteAccount(@PathVariable String accountId) {
+        return accountDao.deleteAccount(accountId);
     }
 }
