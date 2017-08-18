@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-route.js"></script>
+<body>
+
+<div ng-app="myApp" ng-controller="customersCtrl">
+    <table>
+        <tr>
+            <td>ID</td>
+            <td>Number</td>
+            <td>Customer ID</td>
+            <td>Amount</td>
+        </tr>
+        <tr ng-repeat="x in myData track by $index">
+            <td>{{ x.id }}</td>
+            <td>{{ x.number }}</td>
+            <td>{{ x.customerId }}</td>
+            <td>{{ x.amount }}</td>
+        </tr>
+    </table>
+    <button onclick="addAccount()">Add</button>
+    <button onclick="editAccount()">Edit</button>
+    <button onclick="deleteAccount()">Delete</button>
+
+</div>
+
+<script>
+    var app = angular.module('myApp', ["ngRoute"]);
+    app.config(function($routeProvider) {
+        $routeProvider
+            .when("/", {
+                templateUrl : "test.html"
+            })
+            .when("/add", {
+                templateUrl : "add.html"
+            })
+            .when("/green", {
+                templateUrl : "green.htm"
+            })
+            .when("/blue", {
+                templateUrl : "blue.htm"
+            });
+    });
+    app.controller('customersCtrl', function($scope, $http) {
+        if (typeof(EventSource) !== "undefined") {
+            var source = new EventSource("test");
+            source.onmessage = function (event) {
+                $scope.myData = event.data;
+                console.log('get: ' + $scope.myData);
+//            alert(data.data);
+            };
+        } else {
+            document.getElementById("serverData").innerHTML = "Sorry, your browser does not support server-sent events...";
+        }
+        $http.get("test").then(function (response) {
+            $scope.myData = response.data;
+            console.log('response: ' + response.data);
+        });
+    });
+</script>
+<script>
+    function addAccount() {
+        window.location.href = "add.html?editMode=false";
+    }
+    function editAccount() {
+        window.location.href = "add.html?editMode=true&id=1";
+    }
+    function deleteAccount() {
+        window.location.href = "add.html";
+    }
+</script>
+</body>
+</html>

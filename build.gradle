@@ -1,0 +1,23 @@
+group 'com.testdev'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+//thymeleaf.version=3.0.7-SNAPSHOT
+//thymeleaf-spring5.version=3.0.7-SNAPSHOT
+
+repositories {
+    mavenCentral()
+    maven { url "https://repo.spring.io/snapshot" }
+    maven { url "https://repo.spring.io/milestone" }
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+}
+
+dependencies {
+//    compile('org.springframework.boot:spring-boot-starter-webflux:2.0.0.BUILD-SNAPSHOT')
+    compile('org.springframework.boot:spring-boot-starter-data-mongodb-reactive:2.0.0.BUILD-SNAPSHOT')
+    compile('org.springframework.boot.experimental:spring-boot-starter-web-reactive:0.1.0.BUILD-SNAPSHOT')
+    compile("org.springframework.boot:spring-boot-devtools")
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}

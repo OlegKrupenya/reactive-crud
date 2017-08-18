@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+
+<body>
+
+<h1>Crowd Control Gyroscope</h1>
+<div id="gyroscopeData"></div>
+<div id="serverData"></div>
+<canvas id="myCanvas" width="600" height="600" style="background: yellow"></canvas>
+
+<script>
+    if(typeof(EventSource) !== "undefined") {
+        var source = new EventSource("test");
+        source.onmessage = function(event) {
+            var data = JSON.parse( event.data );
+            alert(data.data);
+        };
+    } else {
+        document.getElementById("serverData").innerHTML = "Sorry, your browser does not support server-sent events...";
+    }
+
+
+
+    // SENDING DATA TO SERVER
+
+    // cache to check for change
+    var lastLR, lastFB, lastDir;
+
+    function sendToServer(lr, fb, dir) {
+        var changed = lr != lastLR || fb != lastFB || lastDir != dir;
+        lastLR = lr;
+        lastFB = fb;
+        lastDir = dir;
+        document.getElementById("gyroscopeData").innerHTML = "gyroscope:"+lr+" "+fb+" "+dir +" " + (changed?" + ":"");
+        if (changed) {
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function() {
+                if (xmlhttp.readyState == XMLHttpRequest.DONE ) {
+                    if (xmlhttp.status == 200) {
+                        console.log("http put sent");
+                    }
+                    else {
+                        console.log("http error "+xmlhttp.status);
+                    }
+                }
+            };
+            xmlhttp.open("PUT", "orientation", true);
+            xmlhttp.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+            xmlhttp.send('{"x":'+lr+', "y":'+fb+', "z":'+dir+'}');
+        }
+    }
+
+    function drawPosition(x,y) {
+        //console.log(x+"-"+y);
+        var canvas = document.getElementById("myCanvas");
+        var ctx = canvas.getContext("2d");
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        // mark center
+        ctx.font = "100px Arial";
+        ctx.fillText("O",279,318);
+        // draw cursor
+        ctx.font = "70px Arial";
+        ctx.fillText("x",x+300,y+300);
+    }
+
+    drawPosition(0,0);
+
+    sendToServer(1,1,1);
+
+</script>
+
+</body>
+</html>
