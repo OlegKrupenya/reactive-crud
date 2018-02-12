@@ -3,9 +3,15 @@ version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
 
-sourceCompatibility = 1.8
+//sourceCompatibility = 1.8
 //thymeleaf.version=3.0.7-SNAPSHOT
 //thymeleaf-spring5.version=3.0.7-SNAPSHOT
+
+configurations {
+    all*.exclude module: 'bson'
+    all*.exclude module: 'mongodb-driver'
+    all*.exclude module: 'mongodb-driver-core'
+}
 
 repositories {
     mavenCentral()
@@ -15,9 +21,10 @@ repositories {
 }
 
 dependencies {
-//    compile('org.springframework.boot:spring-boot-starter-webflux:2.0.0.BUILD-SNAPSHOT')
+    compile('org.springframework.boot:spring-boot-starter-webflux:2.0.0.BUILD-SNAPSHOT')
     compile('org.springframework.boot:spring-boot-starter-data-mongodb-reactive:2.0.0.BUILD-SNAPSHOT')
     compile('org.springframework.boot.experimental:spring-boot-starter-web-reactive:0.1.0.BUILD-SNAPSHOT')
-    compile("org.springframework.boot:spring-boot-devtools")
+    compile("org.springframework.boot:spring-boot-devtools:2.0.0.BUILD-SNAPSHOT")
+    compile files('lib/myJar-0.1.0.jar')
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
